@@ -27,6 +27,12 @@ export interface Asset {
   purchaseDate: string;
 }
 
+export interface Contribution {
+  id: string;
+  amount: number;
+  date: string;
+}
+
 export interface Goal {
   id: string;
   name: string;
@@ -35,6 +41,7 @@ export interface Goal {
   deadline: string;
   monthlyContribution: number;
   expectedReturn: number;
+  contributions?: Contribution[];
 }
 
 export interface Investment {
@@ -66,6 +73,7 @@ interface FinanceState {
   addGoal: (goal: Omit<Goal, 'id'>) => void;
   updateGoal: (id: string, goal: Partial<Goal>) => void;
   deleteGoal: (id: string) => void;
+  addContribution: (goalId: string, amount: number) => void;
   
   // Investments
   investments: Investment[];
@@ -249,6 +257,25 @@ export const useFinanceStore = create<FinanceState>()(
       deleteGoal: (id) =>
         set((state) => ({
           goals: state.goals.filter((g) => g.id !== id)
+        })),
+
+      addContribution: (goalId, amount) =>
+        set((state) => ({
+          goals: state.goals.map((g) => {
+            if (g.id === goalId) {
+              const newContribution: Contribution = {
+                id: Date.now().toString(),
+                amount,
+                date: new Date().toISOString(),
+              };
+              return {
+                ...g,
+                currentAmount: g.currentAmount + amount,
+                contributions: [...(g.contributions || []), newContribution],
+              };
+            }
+            return g;
+          }),
         })),
 
       addInvestment: (investment) =>

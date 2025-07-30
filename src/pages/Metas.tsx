@@ -14,13 +14,17 @@ import {
   CurrencyDollarIcon,
   ChartBarIcon,
   PencilIcon,
-  TrashIcon
+  TrashIcon,
+  ChevronDownIcon
 } from '@heroicons/react/24/outline';
 import toast from 'react-hot-toast';
 
 export default function Metas() {
-  const { goals, addGoal, updateGoal, deleteGoal } = useFinanceStore();
+  const { goals, addGoal, updateGoal, deleteGoal, addContribution } = useFinanceStore();
   const [isOpen, setIsOpen] = useState(false);
+  const [isContributionOpen, setIsContributionOpen] = useState(false);
+  const [selectedGoal, setSelectedGoal] = useState<Goal | null>(null);
+  const [contributionAmount, setContributionAmount] = useState('');
   const [editingGoal, setEditingGoal] = useState<Goal | null>(null);
 
   const [formData, setFormData] = useState({
@@ -369,6 +373,16 @@ export default function Metas() {
                       <Button
                         size="icon"
                         variant="ghost"
+                        onClick={() => {
+                          setSelectedGoal(goal);
+                          setIsContributionOpen(true);
+                        }}
+                      >
+                        <PlusIcon className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        size="icon"
+                        variant="ghost"
                         onClick={() => handleEdit(goal)}
                       >
                         <PencilIcon className="h-4 w-4" />
@@ -444,6 +458,23 @@ export default function Metas() {
                         </div>
                       )}
                     </div>
+
+                    {/* Contributions History */}
+                    {goal.contributions && goal.contributions.length > 0 && (
+                      <div className="pt-4 border-t border-border/50">
+                        <h4 className="text-sm font-medium mb-2">Histórico de Aportes</h4>
+                        <ul className="space-y-2">
+                          {goal.contributions.map((c) => (
+                            <li key={c.id} className="flex justify-between items-center text-sm">
+                              <span>{new Date(c.date).toLocaleDateString('pt-BR')}</span>
+                              <span className="font-medium text-success">
+                                {c.amount.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                              </span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -451,6 +482,54 @@ export default function Metas() {
           })
         )}
       </div>
+
+      {/* Contribution Dialog */}
+      <Dialog open={isContributionOpen} onOpenChange={setIsContributionOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Adicionar Aporte</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <p>
+              Meta: <span className="font-medium">{selectedGoal?.name}</span>
+            </p>
+            <div>
+              <Label htmlFor="contribution">Valor do Aporte (R$)</Label>
+              <Input
+                id="contribution"
+                type="number"
+                value={contributionAmount}
+                onChange={(e) => setContributionAmount(e.target.value)}
+                placeholder="100.00"
+              />
+            </div>
+            <div className="flex gap-2 pt-4">
+              <Button
+                onClick={() => {
+                  if (selectedGoal && contributionAmount) {
+                    addContribution(selectedGoal.id, parseFloat(contributionAmount));
+                    toast.success('Aporte adicionado com sucesso!');
+                    setContributionAmount('');
+                    setIsContributionOpen(false);
+                  } else {
+                    toast.error('O valor do aporte não pode estar vazio.');
+                  }
+                }}
+                className="flex-1"
+              >
+                Salvar Aporte
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setIsContributionOpen(false)}
+              >
+                Cancelar
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
