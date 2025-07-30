@@ -9,9 +9,11 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import useAuth from "@/hooks/use-auth";
 import { ChevronDown } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 function UserMenu() {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
   if (!user) {
     return null;
@@ -52,7 +54,10 @@ function UserMenu() {
         <DropdownMenuLabel>Plano Ativo: Pro</DropdownMenuLabel>
         <DropdownMenuItem disabled>Gerenciar Plano</DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={logout}>Sair</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => {
+          logout();
+          navigate("/auth");
+        }}>Sair</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
