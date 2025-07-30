@@ -2,12 +2,14 @@ import { useState, useEffect } from 'react';
 
 const useAuth = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [isAuthLoading, setIsAuthLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const loggedInUser = localStorage.getItem('user');
     if (loggedInUser) {
       setIsAuthenticated(true);
     }
+    setIsAuthLoading(false);
   }, []);
 
   const login = (email: string) => {
@@ -38,7 +40,7 @@ const useAuth = () => {
     setIsAuthenticated(false);
   };
 
-  return { isAuthenticated, login, register, logout };
+  return { isAuthenticated, isAuthLoading, login, register, logout };
 };
 
 export default useAuth;
