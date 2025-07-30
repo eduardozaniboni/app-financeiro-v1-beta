@@ -5,6 +5,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Toaster as HotToaster } from 'react-hot-toast';
 import AppLayout from "./components/layout/AppLayout";
+import ProtectedRoute from "./components/layout/ProtectedRoute";
+import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import Transacoes from "./pages/Transacoes";
 import Planejamento from "./pages/Planejamento";
@@ -35,15 +37,18 @@ const App = () => (
       />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<AppLayout />}>
-            <Route index element={<Dashboard />} />
-            <Route path="transacoes" element={<Transacoes />} />
-            <Route path="planejamento" element={<Planejamento />} />
-            <Route path="metas" element={<Metas />} />
-            <Route path="comparador" element={<Comparador />} />
-            <Route path="chatbot" element={<Chatbot />} />
-            <Route path="ativos" element={<Ativos />} />
-            <Route path="parcelamentos" element={<Parcelamentos />} />
+          <Route path="/auth" element={<Auth />} />
+          <Route element={<ProtectedRoute />}>
+            <Route element={<AppLayout />}>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="transacoes" element={<Transacoes />} />
+              <Route path="planejamento" element={<Planejamento />} />
+              <Route path="metas" element={<Metas />} />
+              <Route path="comparador" element={<Comparador />} />
+              <Route path="chatbot" element={<Chatbot />} />
+              <Route path="ativos" element={<Ativos />} />
+              <Route path="parcelamentos" element={<Parcelamentos />} />
+            </Route>
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
