@@ -9,6 +9,10 @@ import Dashboard from "./pages/Dashboard";
 import Transacoes from "./pages/Transacoes";
 import Planejamento from "./pages/Planejamento";
 import Metas from "./pages/Metas";
+import Comparador from "./pages/Comparador";
+import Chatbot from "./pages/Chatbot";
+import Ativos from "./pages/Ativos";
+import Parcelamentos from "./pages/Parcelamentos";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -36,10 +40,10 @@ const App = () => (
             <Route path="transacoes" element={<Transacoes />} />
             <Route path="planejamento" element={<Planejamento />} />
             <Route path="metas" element={<Metas />} />
-            <Route path="comparador" element={<div className="p-8 text-center text-muted-foreground">Módulo em desenvolvimento</div>} />
-            <Route path="chatbot" element={<div className="p-8 text-center text-muted-foreground">Módulo em desenvolvimento</div>} />
-            <Route path="ativos" element={<div className="p-8 text-center text-muted-foreground">Módulo em desenvolvimento</div>} />
-            <Route path="parcelamentos" element={<div className="p-8 text-center text-muted-foreground">Módulo em desenvolvimento</div>} />
+            <Route path="comparador" element={<Comparador />} />
+            <Route path="chatbot" element={<Chatbot />} />
+            <Route path="ativos" element={<Ativos />} />
+            <Route path="parcelamentos" element={<Parcelamentos />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>

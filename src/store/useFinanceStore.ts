@@ -13,6 +13,7 @@ export interface Transaction {
     total: number;
     current: number;
     installmentValue: number;
+    paidInstallments?: number[];
   };
 }
 
