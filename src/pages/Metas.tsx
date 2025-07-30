@@ -26,6 +26,7 @@ export default function Metas() {
   const [selectedGoal, setSelectedGoal] = useState<Goal | null>(null);
   const [contributionAmount, setContributionAmount] = useState('');
   const [editingGoal, setEditingGoal] = useState<Goal | null>(null);
+  const [expandedGoals, setExpandedGoals] = useState<Record<string, boolean>>({});
 
   const [formData, setFormData] = useState({
     name: '',
@@ -462,17 +463,34 @@ export default function Metas() {
                     {/* Contributions History */}
                     {goal.contributions && goal.contributions.length > 0 && (
                       <div className="pt-4 border-t border-border/50">
-                        <h4 className="text-sm font-medium mb-2">Histórico de Aportes</h4>
-                        <ul className="space-y-2">
-                          {goal.contributions.map((c) => (
-                            <li key={c.id} className="flex justify-between items-center text-sm">
-                              <span>{new Date(c.date).toLocaleDateString('pt-BR')}</span>
-                              <span className="font-medium text-success">
-                                {c.amount.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
-                              </span>
-                            </li>
-                          ))}
-                        </ul>
+                        <button
+                          className="flex justify-between items-center w-full"
+                          onClick={() =>
+                            setExpandedGoals((prev) => ({
+                              ...prev,
+                              [goal.id]: !prev[goal.id],
+                            }))
+                          }
+                        >
+                          <h4 className="text-sm font-medium">Histórico de Aportes</h4>
+                          <ChevronDownIcon
+                            className={`h-4 w-4 transition-transform ${
+                              expandedGoals[goal.id] ? 'rotate-180' : ''
+                            }`}
+                          />
+                        </button>
+                        {expandedGoals[goal.id] && (
+                          <ul className="space-y-2 mt-2">
+                            {goal.contributions.map((c) => (
+                              <li key={c.id} className="flex justify-between items-center text-sm">
+                                <span>{new Date(c.date).toLocaleDateString('pt-BR')}</span>
+                                <span className="font-medium text-success">
+                                  {c.amount.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                                </span>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
                       </div>
                     )}
                   </div>
