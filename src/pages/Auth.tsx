@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,8 +13,14 @@ export default function Auth() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [termsAccepted, setTermsAccepted] = useState(false);
-  const { login, register } = useAuth();
+  const { login, register, isAuthenticated, isAuthLoading } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isAuthLoading && isAuthenticated) {
+      navigate("/");
+    }
+  }, [isAuthenticated, isAuthLoading, navigate]);
 
   const handleAuth = () => {
     if (isLogin) {
