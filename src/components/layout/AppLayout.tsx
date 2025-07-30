@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Outlet, NavLink, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import UserMenu from './UserMenu';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { 
   Bars3Icon, 
@@ -122,12 +123,7 @@ export default function AppLayout() {
               </div>
             </div>
             
-            <div className="flex items-center gap-2">
-              <div className="text-right hidden sm:block">
-                <p className="text-sm font-medium text-foreground">Bem-vindo!</p>
-                <p className="text-xs text-muted-foreground">Usuário MVP</p>
-              </div>
-            </div>
+            <UserMenu />
           </div>
         </header>
 

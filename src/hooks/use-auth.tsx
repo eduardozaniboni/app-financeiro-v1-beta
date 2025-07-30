@@ -1,12 +1,18 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
+
+interface User {
+  email: string;
+}
 
 const useAuth = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [isAuthLoading, setIsAuthLoading] = useState<boolean>(true);
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     const loggedInUser = localStorage.getItem('user');
     if (loggedInUser) {
+      setUser(JSON.parse(loggedInUser));
       setIsAuthenticated(true);
     }
     setIsAuthLoading(false);
@@ -14,9 +20,10 @@ const useAuth = () => {
 
   const login = (email: string) => {
     const users = JSON.parse(localStorage.getItem('users') || '[]');
-    const user = users.find((u: any) => u.email === email);
-    if (user) {
-      localStorage.setItem('user', JSON.stringify(user));
+    const foundUser = users.find((u: any) => u.email === email);
+    if (foundUser) {
+      localStorage.setItem('user', JSON.stringify(foundUser));
+      setUser(foundUser);
       setIsAuthenticated(true);
       return true;
     }
@@ -38,9 +45,12 @@ const useAuth = () => {
   const logout = () => {
     localStorage.removeItem('user');
     setIsAuthenticated(false);
+    setUser(null);
   };
 
-  return { isAuthenticated, isAuthLoading, login, register, logout };
+  const userMemo = useMemo(() => user, [user]);
+
+  return { isAuthenticated, isAuthLoading, user: userMemo, login, register, logout };
 };
 
 export default useAuth;
